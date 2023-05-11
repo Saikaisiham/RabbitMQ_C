@@ -1,5 +1,6 @@
 import pika
-
+import time
+import random
 #create connection locally running rabbitmq
 connection_parametre = pika.ConnectionParameters('localhost')
 
@@ -11,11 +12,19 @@ channel = connection.channel()
 
 channel.queue_declare(queue='LettreBox')
 
-message = 'Hello , first RabbitMQ'
+messageId =1
 
-channel.basic_publish(exchange='',routing_key='LettreBox')
+#using the infinte loop to publish a msg every couple seconds
+while(True):
+    message = f'sending messageId: {messageId}'
 
-print(f'sent message: {message}')
+    channel.basic_publish(exchange='',routing_key='LettreBox')
 
-#close the connection 
-connection.close()
+    print(f'sent message: {message}')
+
+    time.sleep(random.randint(1,4))
+
+    #close the connection 
+    # connection.close()
+
+    messageId += 1
